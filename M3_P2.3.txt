@@ -1,0 +1,431 @@
+Microsoft Windows [Version 10.0.18363.836]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Users\Admin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.20 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank_accounts_mng  |
+| car_showroom       |
+| classicmodels      |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| testdatabase       |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> use car_showroom;
+Database changed
+mysql> show tables;
++------------------------+
+| Tables_in_car_showroom |
++------------------------+
+| customers              |
+| orders                 |
++------------------------+
+2 rows in set (0.00 sec)
+
+mysql> describe orders;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| orderNumber     | int         | NO   | PRI | NULL    |       |
+| orderDate       | date        | NO   |     | NULL    |       |
+| requiredDate    | date        | NO   |     | NULL    |       |
+| shippedDate     | date        | YES  |     | NULL    |       |
+| status          | varchar(15) | NO   |     | NULL    |       |
+| comments        | text        | YES  |     | NULL    |       |
+| quantityOrdered | int         | NO   |     | NULL    |       |
+| priceEach       | float       | NO   |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> create table payments(
+    -> customerNumber int notnull,
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'notnull,
+)' at line 2
+mysql> create table payments(
+    -> customerNumber int not null,
+    -> checkNumber varchar(50) not null,
+    -> paymentDate DATE not null,
+    -> amount float not null default 0);
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> describe payments;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| customerNumber | int         | NO   |     | NULL    |       |
+| checkNumber    | varchar(50) | NO   |     | NULL    |       |
+| paymentDate    | date        | NO   |     | NULL    |       |
+| amount         | float       | NO   |     | 0       |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table products(
+    -> productCode varchar(50) unique not null,
+    -> productName varchar(70) not null,
+    -> productScale varchar(10) not null,
+    -> productVendor varchar(50) not null,
+    -> productDescription text not null,
+    -> quantityInStock int not null,
+    -> buyPrice float not null,
+    -> MSRP float not null);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> alter table products modify productCode varchar(15) unique not null;
+Query OK, 0 rows affected, 1 warning (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> describe products;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| productCode        | varchar(15) | NO   | PRI | NULL    |       |
+| productName        | varchar(70) | NO   |     | NULL    |       |
+| productScale       | varchar(10) | NO   |     | NULL    |       |
+| productVendor      | varchar(50) | NO   |     | NULL    |       |
+| productDescription | text        | NO   |     | NULL    |       |
+| quantityInStock    | int         | NO   |     | NULL    |       |
+| buyPrice           | float       | NO   |     | NULL    |       |
+| MSRP               | float       | NO   |     | NULL    |       |
++--------------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> create table productlines(
+    -> productLine varchar(50) unique not null,
+    -> textDescription text,
+    -> image varchar);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 4
+mysql> create table productlines(
+    -> productLine varchar(50) unique not null,
+    -> textDescription text,
+    -> image text
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table employees(
+    -> employeeNumber int unique not null,
+    -> lastName varchar(50) not null,
+    -> firstName varchar(50) not null,
+    -> email varchar(100) not null,
+    -> jobTitle varchar(50) not null
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create offices(
+    -> officeCode varchar(10) unique not null,
+    -> city varchar(50) not null,
+    -> phone varchar(50) not null,
+    -> addressLine1 varchar(50) not null,
+    -> addressLine2 varchar(50),
+    -> state varchar(50) not null,
+    -> country varchar(50) not null,
+    -> postalCode varchar(15) not null
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'offices(
+officeCode varchar(10) unique not null,
+city varchar(50) not null,
+phon' at line 1
+mysql> create table offices(
+    -> officeCode varchar(10) unique not null,
+    -> city varchar(50) not null,
+    -> phone varchar(50) not null,
+    -> addressLine1 varchar(50) not null,
+    -> addressLine2 varchar(50),
+    -> state varchar(50) not null,
+    -> country varchar(50) not null,
+    -> postalCode varchar(15) not null
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> show tables;
++------------------------+
+| Tables_in_car_showroom |
++------------------------+
+| customers              |
+| employees              |
+| offices                |
+| orders                 |
+| payments               |
+| productlines           |
+| products               |
++------------------------+
+7 rows in set (0.00 sec)
+
+mysql> describe customers;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| customerNumber   | int         | NO   |     | NULL    |       |
+| customerName     | varchar(50) | NO   |     | NULL    |       |
+| contactLastName  | varchar(50) | NO   |     | NULL    |       |
+| contactFirstName | varchar(50) | NO   |     | NULL    |       |
+| phone            | varchar(50) | NO   |     | NULL    |       |
+| addressLine1     | varchar(50) | NO   |     | NULL    |       |
+| addressLine2     | varchar(50) | YES  |     | NULL    |       |
+| city             | varchar(50) | NO   |     | NULL    |       |
+| state            | varchar(50) | NO   |     | NULL    |       |
+| postalCode       | varchar(15) | NO   |     | NULL    |       |
+| country          | varchar(50) | NO   |     | NULL    |       |
+| creditLimit      | int         | YES  |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+12 rows in set (0.00 sec)
+
+mysql> describe orders;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| orderNumber     | int         | NO   | PRI | NULL    |       |
+| orderDate       | date        | NO   |     | NULL    |       |
+| requiredDate    | date        | NO   |     | NULL    |       |
+| shippedDate     | date        | YES  |     | NULL    |       |
+| status          | varchar(15) | NO   |     | NULL    |       |
+| comments        | text        | YES  |     | NULL    |       |
+| quantityOrdered | int         | NO   |     | NULL    |       |
+| priceEach       | float       | NO   |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table customers add primary key(customerNumber);
+Query OK, 0 rows affected (0.19 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table orders add customerNumber int unique not null;
+Query OK, 0 rows affected (0.15 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table orders add foreign key(customerNumber) references customers(customerNumber);
+Query OK, 0 rows affected (0.33 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe orders;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| orderNumber     | int         | NO   | PRI | NULL    |       |
+| orderDate       | date        | NO   |     | NULL    |       |
+| requiredDate    | date        | NO   |     | NULL    |       |
+| shippedDate     | date        | YES  |     | NULL    |       |
+| status          | varchar(15) | NO   |     | NULL    |       |
+| comments        | text        | YES  |     | NULL    |       |
+| quantityOrdered | int         | NO   |     | NULL    |       |
+| priceEach       | float       | NO   |     | NULL    |       |
+| customerNumber  | int         | NO   | UNI | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+9 rows in set (0.01 sec)
+
+mysql> describe payments;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| customerNumber | int         | NO   |     | NULL    |       |
+| checkNumber    | varchar(50) | NO   |     | NULL    |       |
+| paymentDate    | date        | NO   |     | NULL    |       |
+| amount         | float       | NO   |     | 0       |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table payments modify customerNumber int not null unique,
+    -> add foreign key(customerNumber) references customers(customerNumber);
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe payments;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| customerNumber | int         | NO   | PRI | NULL    |       |
+| checkNumber    | varchar(50) | NO   |     | NULL    |       |
+| paymentDate    | date        | NO   |     | NULL    |       |
+| amount         | float       | NO   |     | 0       |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table orderdetails(
+    -> orderNumber int not null,
+    -> productCode varchar(15) not null,
+    -> PRIMARY KEY(orderNumber,productCode),
+    -> FOREIGN KEY(orderNumber) references orders(orderNumber),
+    -> FOREIGN KEY(productCode) references products(productCode)
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> describe orderdetails;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| orderNumber | int         | NO   | PRI | NULL    |       |
+| productCode | varchar(15) | NO   | PRI | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> describe productline;
+ERROR 1146 (42S02): Table 'car_showroom.productline' doesn't exist
+mysql> describe productlines;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| productLine     | varchar(50) | NO   | PRI | NULL    |       |
+| textDescription | text        | YES  |     | NULL    |       |
+| image           | text        | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> describe products;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| productCode        | varchar(15) | NO   | PRI | NULL    |       |
+| productName        | varchar(70) | NO   |     | NULL    |       |
+| productScale       | varchar(10) | NO   |     | NULL    |       |
+| productVendor      | varchar(50) | NO   |     | NULL    |       |
+| productDescription | text        | NO   |     | NULL    |       |
+| quantityInStock    | int         | NO   |     | NULL    |       |
+| buyPrice           | float       | NO   |     | NULL    |       |
+| MSRP               | float       | NO   |     | NULL    |       |
++--------------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table products add productLine varchar(50) not null unique,
+    -> add foreign key(productline) references productlines(productLine)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+mysql> alter table products add productLine varchar(50) not null unique,
+    -> add foreign key(productline) references productlines(productLine);
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe products;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| productCode        | varchar(15) | NO   | PRI | NULL    |       |
+| productName        | varchar(70) | NO   |     | NULL    |       |
+| productScale       | varchar(10) | NO   |     | NULL    |       |
+| productVendor      | varchar(50) | NO   |     | NULL    |       |
+| productDescription | text        | NO   |     | NULL    |       |
+| quantityInStock    | int         | NO   |     | NULL    |       |
+| buyPrice           | float       | NO   |     | NULL    |       |
+| MSRP               | float       | NO   |     | NULL    |       |
+| productLine        | varchar(50) | NO   | UNI | NULL    |       |
++--------------------+-------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> describle employees;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'describle employees' at line 1
+mysql> show tables;
++------------------------+
+| Tables_in_car_showroom |
++------------------------+
+| customers              |
+| employees              |
+| offices                |
+| orderdetails           |
+| orders                 |
+| payments               |
+| productlines           |
+| products               |
++------------------------+
+8 rows in set (0.00 sec)
+
+mysql> describe employees;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| employeeNumber | int          | NO   | PRI | NULL    |       |
+| lastName       | varchar(50)  | NO   |     | NULL    |       |
+| firstName      | varchar(50)  | NO   |     | NULL    |       |
+| email          | varchar(100) | NO   |     | NULL    |       |
+| jobTitle       | varchar(50)  | NO   |     | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> describe customers;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| customerNumber   | int         | NO   | PRI | NULL    |       |
+| customerName     | varchar(50) | NO   |     | NULL    |       |
+| contactLastName  | varchar(50) | NO   |     | NULL    |       |
+| contactFirstName | varchar(50) | NO   |     | NULL    |       |
+| phone            | varchar(50) | NO   |     | NULL    |       |
+| addressLine1     | varchar(50) | NO   |     | NULL    |       |
+| addressLine2     | varchar(50) | YES  |     | NULL    |       |
+| city             | varchar(50) | NO   |     | NULL    |       |
+| state            | varchar(50) | NO   |     | NULL    |       |
+| postalCode       | varchar(15) | NO   |     | NULL    |       |
+| country          | varchar(50) | NO   |     | NULL    |       |
+| creditLimit      | int         | YES  |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+12 rows in set (0.00 sec)
+
+mysql> describe payments
+    -> ;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| customerNumber | int         | NO   | PRI | NULL    |       |
+| checkNumber    | varchar(50) | NO   |     | NULL    |       |
+| paymentDate    | date        | NO   |     | NULL    |       |
+| amount         | float       | NO   |     | 0       |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table customers add salesRepEmployeeNumber int not null,
+    -> add foreign key(salesRepEmployeeNumber) references employees(employeeNumber);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe offices;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| officeCode   | varchar(10) | NO   | PRI | NULL    |       |
+| city         | varchar(50) | NO   |     | NULL    |       |
+| phone        | varchar(50) | NO   |     | NULL    |       |
+| addressLine1 | varchar(50) | NO   |     | NULL    |       |
+| addressLine2 | varchar(50) | YES  |     | NULL    |       |
+| state        | varchar(50) | NO   |     | NULL    |       |
+| country      | varchar(50) | NO   |     | NULL    |       |
+| postalCode   | varchar(15) | NO   |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> describe employees;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| employeeNumber | int          | NO   | PRI | NULL    |       |
+| lastName       | varchar(50)  | NO   |     | NULL    |       |
+| firstName      | varchar(50)  | NO   |     | NULL    |       |
+| email          | varchar(100) | NO   |     | NULL    |       |
+| jobTitle       | varchar(50)  | NO   |     | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table employees add officeCode varchar(10) not null,
+    -> add foreign key(officeCode) references offices(officeCode);
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
